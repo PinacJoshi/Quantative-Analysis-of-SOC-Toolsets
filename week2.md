@@ -1,6 +1,6 @@
 # Week 2: Lab Infrastructure & Virtual Network Setup
 
-**Phase:** 1 — Scope & Lab Architecture  
+**Phase:** 1 Scope & Lab Architecture  
 **Period:** Week 2 (2026-09-07 → 2026-09-13)  
 **Deliverable:** Operational multi-node virtual lab environment with verified host-to-host connectivity and synchronized clocks.
 

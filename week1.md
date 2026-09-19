@@ -1,6 +1,6 @@
 # Week 1: Literature Review, Scope Finalization & Metric Formalization
 
-**Phase:** 1 — Scope & Lab Architecture  
+**Phase:** 1 Scope & Lab Architecture  
 **Period:** Week 1 (2026-08-31 → 2026-09-06)  
 **Deliverable:** Initial Project Scope Document & Metric Definition Sheet
 

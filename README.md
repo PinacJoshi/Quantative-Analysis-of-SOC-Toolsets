@@ -1,6 +1,6 @@
 # Quantitative Analysis of SOC Toolsets (5 ECTS)
 **Danish Title:** Kvantitativ analyse af SOC værktøjer  
-**Course Type:** Special Course (*Specialkursus*) — Project work with written technical report  
+**Course Type:** Special Course (*Specialkursus*)
 **Workload:** 5 ECTS (~135 total hours / ~10 to 11 hours per week across 13 weeks)
 
 ---
@@ -48,8 +48,8 @@ gantt
     
     section Phase 1 Setup & Foundations
     W1 Scope & Metrics Definition         :done, w1, 2026-08-31, 7d
-    W2 Lab Environment Architecture       :active, w2, after w1, 7d
-    W3 SOC 4 Toolset Deployment           :w3, after w2, 7d
+    W2 Lab Environment Architecture       :done, w2, after w1, 7d
+    W3 SOC 4 Toolset Deployment           :active, w3, after w2, 7d
 
     section Phase 2 Emulation & Pipeline
     W4 Adversary Emulation Design         :w4, after w3, 7d
@@ -108,7 +108,7 @@ gantt
 * Weekly Focus: Deploy, configure, and verify the 4 selected SOC toolsets under evaluation.
 * Tasks:
   - [ ] Deploy Wazuh manager, indexer, and dashboard; install Wazuh agents on all target endpoints.
-  - [ ] Deploy Suricata on the network gateway/mirror interface with standard rulesets (Emerging Threats Open).
+  - [ ] Deploy Suricata on the network gateway/mirror interface with standard rulesets.
   - [ ] Deploy TheHive and Cortex instances for case management and observable analyzers.
   - [ ] Deploy Shuffle SOAR and configure webhook integrations with Wazuh and TheHive.
   - [ ] Verify agent telemetry heartbeat, log ingestion, alert routing, and baseline dashboard visibility.
