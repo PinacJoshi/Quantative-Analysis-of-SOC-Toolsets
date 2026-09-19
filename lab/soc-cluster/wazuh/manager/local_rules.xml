@@ -1,0 +1,119 @@
+<!--
+  Wazuh Manager — Local Custom Rules
+  Mounted at: /var/ossec/etc/rules/local_rules.xml
+
+  These rules supplement the default ruleset for the SOC benchmarking study.
+
+  Rule ID range reserved for this study: 100000–100999
+  Convention:
+    100000–100099  → ATT&CK Execution / Atomic Red Team markers
+    100100–100199  → Privilege Escalation markers
+    100200–100299  → Persistence markers
+    100300–100399  → Defense Evasion markers
+    100400–100499  → Credential Access markers
+    100500–100599  → Discovery markers
+    100600–100699  → Lateral Movement / C2 markers
+    100900–100999  → Lab / test harness meta-rules
+-->
+
+<group name="local,soc_study,">
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       LAB META-RULES — Test Harness Markers
+       These fire when the test harness injects a specially crafted
+       syslog marker to stamp t₀ (execution timestamp) into Wazuh.
+  ═══════════════════════════════════════════════════════════════════ -->
+  <rule id="100900" level="3">
+    <decoded_as>syslog</decoded_as>
+    <match>SOC_STUDY_TEST_START</match>
+    <description>Lab harness: ATT&amp;CK test execution started</description>
+    <group>soc_study_marker,</group>
+  </rule>
+
+  <rule id="100901" level="3">
+    <decoded_as>syslog</decoded_as>
+    <match>SOC_STUDY_TEST_END</match>
+    <description>Lab harness: ATT&amp;CK test execution completed</description>
+    <group>soc_study_marker,</group>
+  </rule>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       EXECUTION — T1059 Command and Scripting Interpreter
+  ═══════════════════════════════════════════════════════════════════ -->
+  <rule id="100001" level="10">
+    <if_group>auditd</if_group>
+    <match>bash|python3|perl|ruby|powershell</match>
+    <regex>execve</regex>
+    <description>ATT&amp;CK T1059 - Scripting interpreter execution detected</description>
+    <mitre>
+      <id>T1059</id>
+    </mitre>
+    <group>attack,execution,</group>
+  </rule>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       DISCOVERY — T1082 System Information Discovery
+  ═══════════════════════════════════════════════════════════════════ -->
+  <rule id="100500" level="6">
+    <if_group>auditd</if_group>
+    <match>uname|hostname|cat /etc/os-release|lscpu|lsmem</match>
+    <description>ATT&amp;CK T1082 - System information discovery command</description>
+    <mitre>
+      <id>T1082</id>
+    </mitre>
+    <group>attack,discovery,</group>
+  </rule>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       DISCOVERY — T1087 Account Discovery
+  ═══════════════════════════════════════════════════════════════════ -->
+  <rule id="100501" level="6">
+    <if_group>auditd</if_group>
+    <match>cat /etc/passwd|getent passwd|id |whoami|groups</match>
+    <description>ATT&amp;CK T1087 - Account discovery command detected</description>
+    <mitre>
+      <id>T1087</id>
+    </mitre>
+    <group>attack,discovery,</group>
+  </rule>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       CREDENTIAL ACCESS — T1003 OS Credential Dumping
+  ═══════════════════════════════════════════════════════════════════ -->
+  <rule id="100400" level="14">
+    <if_group>auditd</if_group>
+    <match>cat /etc/shadow|unshadow|mimikatz|secretsdump|hashdump</match>
+    <description>ATT&amp;CK T1003 - OS credential dumping attempt detected</description>
+    <mitre>
+      <id>T1003</id>
+    </mitre>
+    <group>attack,credential_access,pci_dss_10.2.5,gdpr_IV_35.7.d,</group>
+  </rule>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       PERSISTENCE — T1053 Scheduled Task/Job (cron)
+  ═══════════════════════════════════════════════════════════════════ -->
+  <rule id="100200" level="10">
+    <if_group>auditd,syscheck</if_group>
+    <match>crontab|/etc/cron|/var/spool/cron</match>
+    <description>ATT&amp;CK T1053 - Scheduled task/cron modification detected</description>
+    <mitre>
+      <id>T1053</id>
+    </mitre>
+    <group>attack,persistence,</group>
+  </rule>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       DEFENSE EVASION — T1070 Indicator Removal (log clearing)
+  ═══════════════════════════════════════════════════════════════════ -->
+  <rule id="100300" level="12">
+    <if_group>auditd</if_group>
+    <match>truncate|shred|> /var/log|rm /var/log</match>
+    <description>ATT&amp;CK T1070 - Log file clearing or indicator removal</description>
+    <mitre>
+      <id>T1070</id>
+    </mitre>
+    <group>attack,defense_evasion,pci_dss_10.6.1,</group>
+  </rule>
+
+</group>

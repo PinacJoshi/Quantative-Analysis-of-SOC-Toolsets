@@ -1,0 +1,47 @@
+<!--
+  libvirt Network Definition — SOC Attacker Subnet
+  File: lab/vm-networks/attacker-net.xml
+
+  This defines the isolated NAT network for the Kali Linux attacker VM.
+  Bridge: virbr2 (10.0.2.0/24)
+
+  Usage:
+    virsh net-define  lab/vm-networks/attacker-net.xml
+    virsh net-start   soc-attacker-net
+    virsh net-autostart soc-attacker-net
+
+  Network isolation design:
+    - The attacker VM (virbr2) can ROUTE to the target subnet (virbr1)
+      via the host's IP forwarding (enabled during Week 2 setup).
+    - The attacker VM does NOT have direct access to the SOC Docker cluster
+      (172.20.0.0/24) — all SOC communication is via Wazuh agent on the target.
+    - Suricata monitors virbr1 (target bridge), capturing attacker→target traffic
+      as it crosses the host routing table.
+
+  Assigned IPs:
+    10.0.2.1    → Gateway (host / libvirt NAT)
+    10.0.2.10   → Kali Linux attacker VM
+    10.0.2.100+ → DHCP range
+-->
+
+<network>
+  <!-- forward mode='nat': required for internet access from VMs.
+       Without this, libvirt generates REJECT rules blocking all outbound traffic. -->
+  <forward mode='nat'>
+    <nat>
+      <port start='1024' end='65535'/>
+    </nat>
+  </forward>
+  <name>soc-attacker-net</name>
+  <uuid/>  <!-- libvirt will auto-generate -->
+  <bridge name="virbr2" stp="on" delay="0"/>
+  <mac address="52:54:00:aa:bb:02"/>
+  <domain name="attacker.soc.lab"/>
+  <ip address="10.0.2.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="10.0.2.100" end="10.0.2.200"/>
+      <!-- Static lease for Kali attacker VM -->
+      <host mac="52:54:00:10:02:10" name="kali-attacker" ip="10.0.2.10"/>
+    </dhcp>
+  </ip>
+</network>

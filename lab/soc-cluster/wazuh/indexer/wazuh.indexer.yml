@@ -1,0 +1,31 @@
+# Wazuh Indexer — OpenSearch node configuration
+# Mounted at: /usr/share/wazuh-indexer/opensearch.yml
+
+network.host: 0.0.0.0
+node.name: wazuh-indexer
+cluster.name: wazuh-cluster
+cluster.initial_master_nodes:
+  - wazuh-indexer
+
+# Disable multi-node discovery for single-node lab setup
+discovery.type: single-node
+
+# Security plugin (built-in Wazuh security)
+plugins.security.ssl.transport.pemcert_filepath: esnode.pem
+plugins.security.ssl.transport.pemkey_filepath: esnode-key.pem
+plugins.security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+plugins.security.ssl.transport.enforce_hostname_verification: false
+plugins.security.ssl.http.enabled: true
+plugins.security.ssl.http.pemcert_filepath: esnode.pem
+plugins.security.ssl.http.pemkey_filepath: esnode-key.pem
+plugins.security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+plugins.security.allow_default_init_securityindex: true
+plugins.security.authcz.admin_dn:
+  - CN=admin,OU=Wazuh,O=Wazuh,L=California,C=US
+plugins.security.nodes_dn:
+  - CN=wazuh-indexer,OU=Wazuh,O=Wazuh,L=California,C=US
+
+# Performance tuning for lab (single node, ~16 GB host)
+indices.memory.index_buffer_size: 10%
+path.data: /var/lib/wazuh-indexer
+path.logs: /var/log/wazuh-indexer

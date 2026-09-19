@@ -1,0 +1,44 @@
+<!--
+  libvirt Network Definition — SOC Target Subnet
+  File: lab/vm-networks/target-net.xml
+
+  This defines the isolated NAT network for target victim VMs.
+  Bridge: virbr1 (10.0.1.0/24)
+
+  Usage:
+    virsh net-define  lab/vm-networks/target-net.xml
+    virsh net-start   soc-target-net
+    virsh net-autostart soc-target-net
+
+  After starting, virbr1 will appear as a host interface.
+  Suricata's Docker container sniffs this interface in host-network mode.
+
+  Assigned IPs:
+    10.0.1.1    → Gateway (host / libvirt NAT)
+    10.0.1.10   → Ubuntu 24.04 target VM
+    10.0.1.20   → (reserved for second target VM if needed)
+    10.0.1.100+ → DHCP range (for ad-hoc VMs)
+-->
+
+<network>
+  <!-- forward mode='nat': libvirt will masquerade this subnet through the host's
+       default route interface. WITHOUT this element, libvirt treats the network as
+       fully isolated and generates REJECT rules — blocking all internet access from VMs. -->
+  <forward mode='nat'>
+    <nat>
+      <port start='1024' end='65535'/>
+    </nat>
+  </forward>
+  <name>soc-target-net</name>
+  <uuid/>  <!-- libvirt will auto-generate -->
+  <bridge name="virbr1" stp="on" delay="0"/>
+  <mac address="52:54:00:aa:bb:01"/>
+  <domain name="target.soc.lab"/>
+  <ip address="10.0.1.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="10.0.1.100" end="10.0.1.200"/>
+      <!-- Static lease for Ubuntu target VM (MAC set during VM creation) -->
+      <host mac="52:54:00:10:01:10" name="ubuntu-target" ip="10.0.1.10"/>
+    </dhcp>
+  </ip>
+</network>

@@ -1,0 +1,33 @@
+# Wazuh Indexer — Internal users (hashed passwords)
+# Mounted at: /usr/share/wazuh-indexer/opensearch-security/internal_users.yml
+#
+# Passwords are bcrypt hashed.
+# admin     → SecureWazuh1!
+# kibanaserver → kibanaserver
+#
+# To regenerate hashes:
+#   docker run --rm wazuh/wazuh-indexer:4.9.2 bash -c \
+#     "/usr/share/wazuh-indexer/plugins/opensearch-security/tools/hash.sh -p 'YourPassword'"
+
+_meta:
+  type: "internalusers"
+  config_version: 2
+
+admin:
+  hash: "$2y$12$K/SpwjtB.wOHJ/Nc6GVRDuc1h0rM1DfvziFRNPtk27P.c4yDr9njO"
+  reserved: true
+  backend_roles:
+    - "admin"
+  description: "Wazuh admin user"
+
+kibanaserver:
+  hash: "$2y$12$4AcgAt3xwOWadA5s5blL6ev39OXDNhmOesEoo33eZtrZ2N9dpLtiq"
+  reserved: true
+  description: "OpenSearch Dashboards user"
+
+wazuh-wui:
+  hash: "$2y$12$ruoM7FqXrpVgaol4zm3hR.ExpliqlG9oBs9E2GJ8iMKFEbfQSTCoW"
+  reserved: false
+  backend_roles:
+    - "wazuh_ui_user"
+  description: "Wazuh UI API user — used by Shuffle integration"
