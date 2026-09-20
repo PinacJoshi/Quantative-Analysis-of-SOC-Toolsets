@@ -49,10 +49,10 @@ gantt
     section Phase 1 Setup & Foundations
     W1 Scope & Metrics Definition         :done, w1, 2026-08-31, 7d
     W2 Lab Environment Architecture       :done, w2, after w1, 7d
-    W3 SOC 4 Toolset Deployment           :active, w3, after w2, 7d
+    W3 SOC 4 Toolset Deployment           :done, w3, after w2, 7d
 
     section Phase 2 Emulation & Pipeline
-    W4 Adversary Emulation Design         :w4, after w3, 7d
+    W4 Adversary Emulation Design         :active, w4, after w3, 7d
     W5 Baseline & Background Noise        :w5, after w4, 7d
     W6 Telemetry & Log Export Pipeline    :w6, after w5, 7d
 
