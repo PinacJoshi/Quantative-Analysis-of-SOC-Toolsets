@@ -15,7 +15,7 @@
 - [x] Enable host IP forwarding so attacker VM can route to target subnet.
 - [x] Verify VM-to-VM connectivity across subnets (attacker → target ping).
 - [x] Configure `chrony` NTP on all VMs synced to host for sub-second timestamp accuracy.
-- [x] Validate Docker Compose file syntax and pull all SOC cluster images (do not start services yet).
+- [x] Validate Docker Compose file syntax and pull all SOC cluster images.
 - [x] Create placeholder directory structure for Suricata logs and rules.
 - [x] Document final lab topology diagram, IP assignments, and port reference table.
 
@@ -47,9 +47,12 @@ The lab uses a **Hybrid Architecture**: SOC tooling runs as Docker containers on
 │  │  172.20.0.21  minio              (TheHive storage, ports 9000/9001) │    │
 │  │  172.20.0.22  thehive            (Case mgmt UI, port 9090)          │    │
 │  │  172.20.0.23  cortex             (Analyzer engine, port 9091)       │    │
+│  │  172.20.0.24  cortex-elasticsearch (Cortex DB, internal)            │    │
 │  │  172.20.0.30  shuffle-frontend   (SOAR UI, port 3001)               │    │
 │  │  172.20.0.31  shuffle-backend    (SOAR API, port 5001)              │    │
 │  │  172.20.0.32  shuffle-opensearch (SOAR DB, internal)                │    │
+│  │  172.20.0.33  shuffle-orborus    (SOAR worker orchestrator)         │    │
+│  │  172.20.0.34  docker-socket-proxy (SELinux socket bridge, port 2375) │    │
 │  └─────────────────────────────────────────────────────────────────────┘    │
 │                                                                             │
 │  ┌──────────────────────────────┐   ┌──────────────────────────────────┐    │
@@ -80,15 +83,19 @@ The lab uses a **Hybrid Architecture**: SOC tooling runs as Docker containers on
 | MinIO (Docker) | ~256 MB | — | 5 GB vol |
 | TheHive (Docker) | 1 GB (`-Xms512m -Xmx1g`) | — | 5 GB vol |
 | Cortex (Docker) | 512 MB (`-Xms256m -Xmx512m`) | — | 2 GB vol |
+| Cortex Elasticsearch (Docker) | 512 MB (`-Xms256m -Xmx512m`) | — | 5 GB vol |
 | Shuffle Backend (Docker) | ~512 MB | — | 2 GB vol |
 | Shuffle OpenSearch (Docker) | 512 MB | — | 5 GB vol |
+| Shuffle Frontend (Docker) | ~128 MB | — | — |
+| Shuffle Orborus (Docker) | ~256 MB | — | — |
+| Docker Socket Proxy (Docker) | ~64 MB | — | — |
 | Suricata (Docker, host-net) | ~256 MB | — | 2 GB logs |
-| **SOC Docker total** | **~5.7 GB** | | |
+| **SOC Docker total** | **~6.7 GB** | | |
 | Ubuntu 24.04 target VM | 1.5 GB | 2 | 20 GB |
 | Kali Linux attacker VM | 1.5 GB | 4 | 20 GB |
 | **VM total** | **3.0 GB** | 6 | |
 | Host OS + headroom | ~1.5 GB | | |
-| **Grand Total** | **~10.2 GB** | | |
+| **Grand Total** | **~11.2 GB** | | |
 
 ---
 

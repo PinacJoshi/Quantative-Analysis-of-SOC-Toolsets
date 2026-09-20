@@ -4,21 +4,23 @@
 network.host: 0.0.0.0
 node.name: wazuh-indexer
 cluster.name: wazuh-cluster
-cluster.initial_master_nodes:
-  - wazuh-indexer
 
-# Disable multi-node discovery for single-node lab setup
+# Single-node mode — cluster.initial_master_nodes must NOT be set
+# alongside discovery.type: single-node (OpenSearch will reject both)
 discovery.type: single-node
 
-# Security plugin (built-in Wazuh security)
-plugins.security.ssl.transport.pemcert_filepath: esnode.pem
-plugins.security.ssl.transport.pemkey_filepath: esnode-key.pem
-plugins.security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+### Option to allow Filebeat-oss 7.10.2 to work ###
+compatibility.override_main_response_version: true
+
+# Security plugin — absolute paths to the mounted cert directory
+plugins.security.ssl.transport.pemcert_filepath: /usr/share/wazuh-indexer/certs/esnode.pem
+plugins.security.ssl.transport.pemkey_filepath: /usr/share/wazuh-indexer/certs/esnode-key.pem
+plugins.security.ssl.transport.pemtrustedcas_filepath: /usr/share/wazuh-indexer/certs/root-ca.pem
 plugins.security.ssl.transport.enforce_hostname_verification: false
 plugins.security.ssl.http.enabled: true
-plugins.security.ssl.http.pemcert_filepath: esnode.pem
-plugins.security.ssl.http.pemkey_filepath: esnode-key.pem
-plugins.security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+plugins.security.ssl.http.pemcert_filepath: /usr/share/wazuh-indexer/certs/esnode.pem
+plugins.security.ssl.http.pemkey_filepath: /usr/share/wazuh-indexer/certs/esnode-key.pem
+plugins.security.ssl.http.pemtrustedcas_filepath: /usr/share/wazuh-indexer/certs/root-ca.pem
 plugins.security.allow_default_init_securityindex: true
 plugins.security.authcz.admin_dn:
   - CN=admin,OU=Wazuh,O=Wazuh,L=California,C=US

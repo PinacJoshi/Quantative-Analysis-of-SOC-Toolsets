@@ -14,19 +14,19 @@ _meta:
   config_version: 2
 
 admin:
-  hash: "$2y$12$K/SpwjtB.wOHJ/Nc6GVRDuc1h0rM1DfvziFRNPtk27P.c4yDr9njO"
+  hash: "$2y$12$m6XKhZMwBRygT6vGzLOQZuNs5E2WErm7n5LJQaAP1C9m7wHqYv8m."
   reserved: true
   backend_roles:
     - "admin"
   description: "Wazuh admin user"
 
 kibanaserver:
-  hash: "$2y$12$4AcgAt3xwOWadA5s5blL6ev39OXDNhmOesEoo33eZtrZ2N9dpLtiq"
+  hash: "$2y$12$3NKHZrEjUMj9/oUhjDIRCO9gE/uvXoG19ztRLsAc.Z0yP0gmNNtDW"
   reserved: true
   description: "OpenSearch Dashboards user"
 
 wazuh-wui:
-  hash: "$2y$12$ruoM7FqXrpVgaol4zm3hR.ExpliqlG9oBs9E2GJ8iMKFEbfQSTCoW"
+  hash: "$2y$12$/YlIxDW.u8cnb3VFUXjtFuZHEvJkQd6AXYvLOHXSIFMWnAnaCpjde"
   reserved: false
   backend_roles:
     - "wazuh_ui_user"

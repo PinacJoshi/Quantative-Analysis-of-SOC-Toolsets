@@ -24,14 +24,12 @@
        syslog marker to stamp t₀ (execution timestamp) into Wazuh.
   ═══════════════════════════════════════════════════════════════════ -->
   <rule id="100900" level="3">
-    <decoded_as>syslog</decoded_as>
     <match>SOC_STUDY_TEST_START</match>
     <description>Lab harness: ATT&amp;CK test execution started</description>
     <group>soc_study_marker,</group>
   </rule>
 
   <rule id="100901" level="3">
-    <decoded_as>syslog</decoded_as>
     <match>SOC_STUDY_TEST_END</match>
     <description>Lab harness: ATT&amp;CK test execution completed</description>
     <group>soc_study_marker,</group>
@@ -41,7 +39,7 @@
        EXECUTION — T1059 Command and Scripting Interpreter
   ═══════════════════════════════════════════════════════════════════ -->
   <rule id="100001" level="10">
-    <if_group>auditd</if_group>
+    <if_group>audit</if_group>
     <match>bash|python3|perl|ruby|powershell</match>
     <regex>execve</regex>
     <description>ATT&amp;CK T1059 - Scripting interpreter execution detected</description>
@@ -55,7 +53,7 @@
        DISCOVERY — T1082 System Information Discovery
   ═══════════════════════════════════════════════════════════════════ -->
   <rule id="100500" level="6">
-    <if_group>auditd</if_group>
+    <if_group>audit</if_group>
     <match>uname|hostname|cat /etc/os-release|lscpu|lsmem</match>
     <description>ATT&amp;CK T1082 - System information discovery command</description>
     <mitre>
@@ -68,7 +66,7 @@
        DISCOVERY — T1087 Account Discovery
   ═══════════════════════════════════════════════════════════════════ -->
   <rule id="100501" level="6">
-    <if_group>auditd</if_group>
+    <if_group>audit</if_group>
     <match>cat /etc/passwd|getent passwd|id |whoami|groups</match>
     <description>ATT&amp;CK T1087 - Account discovery command detected</description>
     <mitre>
@@ -81,7 +79,7 @@
        CREDENTIAL ACCESS — T1003 OS Credential Dumping
   ═══════════════════════════════════════════════════════════════════ -->
   <rule id="100400" level="14">
-    <if_group>auditd</if_group>
+    <if_group>audit</if_group>
     <match>cat /etc/shadow|unshadow|mimikatz|secretsdump|hashdump</match>
     <description>ATT&amp;CK T1003 - OS credential dumping attempt detected</description>
     <mitre>
@@ -94,7 +92,7 @@
        PERSISTENCE — T1053 Scheduled Task/Job (cron)
   ═══════════════════════════════════════════════════════════════════ -->
   <rule id="100200" level="10">
-    <if_group>auditd,syscheck</if_group>
+    <if_group>audit</if_group>
     <match>crontab|/etc/cron|/var/spool/cron</match>
     <description>ATT&amp;CK T1053 - Scheduled task/cron modification detected</description>
     <mitre>
@@ -107,7 +105,7 @@
        DEFENSE EVASION — T1070 Indicator Removal (log clearing)
   ═══════════════════════════════════════════════════════════════════ -->
   <rule id="100300" level="12">
-    <if_group>auditd</if_group>
+    <if_group>audit</if_group>
     <match>truncate|shred|> /var/log|rm /var/log</match>
     <description>ATT&amp;CK T1070 - Log file clearing or indicator removal</description>
     <mitre>
